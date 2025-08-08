@@ -58,6 +58,28 @@ src/app/layout.tsx (root)
 - **Prettier**: Auto-format code consistently
 - **Import organization**: Group imports (external → internal → relative)
 
+### Quality Assurance Workflow
+**ALWAYS perform these checks after making any code changes:**
+
+1. **Type Checking**: Run `npx tsc --noEmit` to verify TypeScript types
+2. **Linting**: Run `npm run lint` to check for code style and potential errors
+3. **Testing**: Run `npm test` to ensure all tests pass
+4. **Test Coverage**: Use `npm run test:coverage` for coverage validation
+
+```bash
+# Quality check sequence after changes
+npx tsc --noEmit      # Check TypeScript errors
+npm run lint          # Check ESLint errors
+npm test              # Run test suite
+npm run test:coverage # Verify coverage thresholds
+```
+
+**Never commit code that:**
+- Has TypeScript compilation errors
+- Fails ESLint checks
+- Breaks existing tests
+- Reduces test coverage below thresholds
+
 ```tsx
 // Clean component example
 import { useState } from "react";
@@ -92,10 +114,55 @@ export function BookSearchContainer() {
 ### Environment Setup
 ```bash
 npm install
+npm install framer-motion  # For animations and transitions
 # Configure .env with DATABASE_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, OPENAI_API_KEY
 npx prisma migrate dev --name init
 npm run dev  # Uses --turbopack flag for faster builds
 ```
+
+### Git Commit Conventions (Semantic Commits)
+Follow conventional commit format for clear, automated versioning and changelog generation:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+#### Commit Types
+- **feat**: New feature for the user
+- **fix**: Bug fix for the user
+- **docs**: Documentation changes
+- **style**: Code formatting, missing semicolons, etc.
+- **refactor**: Code changes that neither fix bugs nor add features
+- **perf**: Performance improvements
+- **test**: Adding or updating tests
+- **build**: Changes to build system or dependencies
+- **ci**: Changes to CI configuration
+- **chore**: Maintenance tasks, dependency updates
+
+#### Examples
+```bash
+feat(auth): add Google OAuth authentication
+fix(search): handle empty search results gracefully
+docs(readme): update installation instructions
+style(components): format code with prettier
+refactor(hooks): extract book search logic to custom hook
+test(api): add unit tests for book search functionality
+perf(images): optimize book cover loading
+build(deps): upgrade next.js to version 15
+```
+
+#### Scope Guidelines
+- **auth**: Authentication and authorization
+- **search**: Book search functionality
+- **recommendations**: AI recommendation features
+- **ui**: UI components and styling
+- **api**: API routes and external integrations
+- **db**: Database and Prisma changes
+- **types**: TypeScript type definitions
 
 ### Shadcn UI Components
 - Configured for "new-york" style with CSS variables in `components.json`
@@ -107,6 +174,31 @@ npm run dev  # Uses --turbopack flag for faster builds
 - Custom font loading: Geist Sans & Geist Mono in `layout.tsx`
 - Responsive design patterns in main components
 - Color scheme: Blue primary (`bg-blue-600`), gray neutrals
+
+### Animation & Motion
+- **Framer Motion** for smooth animations and transitions
+- Use motion components for page transitions, modals, and interactive elements
+- Implement micro-interactions for better user experience
+- Animate book cards, search results, and recommendation displays
+
+```tsx
+// Animation example
+import { motion } from "framer-motion";
+
+export function BookCard({ book }: { book: Book }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.05 }}
+      transition={{ duration: 0.3 }}
+      className="book-card"
+    >
+      {/* Card content */}
+    </motion.div>
+  );
+}
+```
 
 ## Testing Strategy
 
@@ -280,6 +372,28 @@ npm run test:coverage # Generate coverage report
 npm run test:ci       # CI-friendly test run
 ```
 
+### Pre-Commit Quality Checks
+Before committing any changes, always run the complete quality check pipeline:
+
+```bash
+# Complete quality validation pipeline
+npm run lint:check    # Check linting issues
+npm run type:check    # TypeScript compilation check
+npm test              # Run full test suite
+npm run test:coverage # Verify coverage meets thresholds
+
+# Fix issues if found
+npm run lint:fix      # Auto-fix linting issues
+npm run format        # Format code with Prettier
+```
+
+**Quality Gates:**
+- ✅ No TypeScript errors
+- ✅ No ESLint violations
+- ✅ All tests passing
+- ✅ Coverage above 70% threshold
+- ✅ Code properly formatted
+
 ## Code Patterns & Conventions
 
 ### Client vs Server Components
@@ -329,3 +443,36 @@ NEXTAUTH_SECRET=...
 - `npx shadcn@latest add [component]` - Add new UI components
 - `npm test` - Run test suite
 - `npm run test:coverage` - Generate test coverage report
+
+## Git Workflow Best Practices
+- Use semantic commits for all changes
+- Create feature branches for new functionality
+- Write descriptive commit messages with proper scope
+- Squash commits when merging to maintain clean history
+- Use conventional commit format for automated versioning
+
+### Example Development Flow
+```bash
+# Create feature branch
+git checkout -b feat/book-recommendations
+
+# Make changes and commit with semantic format
+git add .
+git commit -m "feat(recommendations): implement AI-powered book suggestions"
+
+# ALWAYS run quality checks after changes
+npx tsc --noEmit      # Verify TypeScript
+npm run lint          # Check ESLint
+npm test              # Run tests
+npm run test:coverage # Check coverage
+
+# Continue development with focused commits
+git commit -m "style(recommendations): improve recommendation card layout"
+git commit -m "test(recommendations): add unit tests for recommendation logic"
+
+# Final quality check before push
+npm run lint:check && npm run type:check && npm test
+
+# Push and create pull request
+git push origin feat/book-recommendations
+```
