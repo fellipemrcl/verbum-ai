@@ -1,13 +1,12 @@
 "use client";
 
-
-
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 import { SignInButton } from "@/components/SignInButton";
 
-export default function Header() {
+export function Header() {
   const { data: session } = useSession();
 
   return (
@@ -27,12 +26,14 @@ export default function Header() {
             />
           )}
           <span className="font-medium">{session.user.name}</span>
-          <button
-            className="ml-2 text-sm text-gray-500 hover:text-red-600 border px-2 py-1 rounded"
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-2 text-sm text-gray-500 hover:text-red-600"
             onClick={() => signOut({ callbackUrl: "/" })}
           >
             Sign out
-          </button>
+          </Button>
         </div>
       ) : (
         <SignInButton />

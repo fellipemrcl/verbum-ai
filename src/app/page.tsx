@@ -1,10 +1,9 @@
 "use client";
 
-
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { SignInButton } from "@/components/SignInButton";
-import BookSearch from "@/components/BookSearch";
+import { BookSearchContainer } from "@/components/features/BookSearchContainer";
 
 export default function Home() {
   const { status } = useSession();
@@ -34,7 +33,7 @@ export default function Home() {
       {status === "authenticated" && (
         <>
           <p className="text-green-600 font-medium mb-4">You are signed in. Enjoy your recommendations!</p>
-          <BookSearch />
+          <BookSearchContainer />
         </>
       )}
       <footer className="mt-8 text-xs text-gray-500 dark:text-gray-400">
