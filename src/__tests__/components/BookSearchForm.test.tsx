@@ -13,7 +13,7 @@ describe("BookSearchForm Component", () => {
     render(<BookSearchForm onSearch={mockOnSearch} />);
 
     expect(
-      screen.getByPlaceholderText(/search for a book/i)
+      screen.getByPlaceholderText(/search for any book, author, or genre/i)
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /search/i })).toBeInTheDocument();
   });
@@ -21,7 +21,7 @@ describe("BookSearchForm Component", () => {
   it("should handle form submission", () => {
     render(<BookSearchForm onSearch={mockOnSearch} />);
 
-    const searchInput = screen.getByPlaceholderText(/search for a book/i);
+    const searchInput = screen.getByPlaceholderText(/search for any book, author, or genre/i);
     const searchButton = screen.getByRole("button", { name: /search/i });
 
     fireEvent.change(searchInput, { target: { value: "test book" } });
