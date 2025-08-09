@@ -17,6 +17,7 @@ import { getBookCoverUrl } from "@/lib/api/books";
 import { useAIRecommendations } from "@/hooks/useAIRecommendations";
 import { RecommendedBooksList } from "./RecommendedBooksList";
 import { RecommendedBookDialog } from "./RecommendedBookDialog";
+import { AIRecommendationsLoading } from "./AIRecommendationsLoading";
 import type { Book } from "@/types/BookTypes";
 import type { RecommendedBook } from "@/types/AITypes";
 
@@ -212,11 +213,20 @@ export function BookDetailDialog({ book, open, onClose }: BookDetailDialogProps)
               )}
             </AnimatePresence>
 
+            {/* AI Recommendations Loading State */}
+            <AnimatePresence>
+              {loading && (
+                <AIRecommendationsLoading className="mt-6" />
+              )}
+            </AnimatePresence>
+
             {/* Beautiful Recommended Books Display */}
-            <RecommendedBooksList 
-              books={recommendedBooks} 
-              onBookSelect={handleRecommendedBookSelect} 
-            />
+            {!loading && (
+              <RecommendedBooksList 
+                books={recommendedBooks} 
+                onBookSelect={handleRecommendedBookSelect} 
+              />
+            )}
             
             <DialogFooter className="mt-6">
               <DialogClose asChild>
