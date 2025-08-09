@@ -14,7 +14,7 @@ interface BookSearchFormProps {
 
 export function BookSearchForm({ onSearch, onClear, loading = false }: BookSearchFormProps) {
   const [query, setQuery] = useState("");
-  const { popularSearches, loading: popularLoading } = usePopularSearches();
+  const { popularSearches } = usePopularSearches();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,7 +116,7 @@ export function BookSearchForm({ onSearch, onClear, loading = false }: BookSearc
         className="mt-3 flex flex-wrap gap-2"
       >
         <span className="text-sm text-slate-500 dark:text-slate-400">
-          {popularLoading ? "Loading popular searches..." : "Popular searches:"}
+          Popular searches:
         </span>
         {popularSearches.map((suggestion, index) => (
           <motion.button
@@ -131,7 +131,7 @@ export function BookSearchForm({ onSearch, onClear, loading = false }: BookSearc
               onSearch(suggestion);
             }}
             className="px-3 py-1 text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/50 hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-200"
-            disabled={loading || popularLoading}
+            disabled={loading}
           >
             {suggestion}
           </motion.button>
