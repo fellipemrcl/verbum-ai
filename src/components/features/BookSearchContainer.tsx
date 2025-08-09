@@ -9,12 +9,16 @@ import { BookDetailDialog } from "@/components/features/BookDetailDialog";
 import type { Book } from "@/types/BookTypes";
 
 export function BookSearchContainer() {
-  const { books, loading, error, search } = useBookSearch();
+  const { books, loading, error, search, clearResults } = useBookSearch();
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleSearch = (query: string) => {
     search(query);
+  };
+
+  const handleClear = () => {
+    clearResults();
   };
 
   const handleBookSelect = (book: Book) => {
@@ -40,7 +44,7 @@ export function BookSearchContainer() {
         transition={{ delay: 0.2, duration: 0.5 }}
         className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 dark:border-slate-800/50 p-8"
       >
-        <BookSearchForm onSearch={handleSearch} loading={loading} />
+        <BookSearchForm onSearch={handleSearch} onClear={handleClear} loading={loading} />
         
         <AnimatePresence>
           {error && (
