@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { SignInButton } from "@/components/SignInButton";
 import { BookSearchContainer } from "@/components/features/BookSearchContainer";
 
@@ -23,19 +24,13 @@ export default function Home() {
             transition={{ delay: 0.3, duration: 0.5, type: "spring", stiffness: 200 }}
             className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg"
           >
-            <svg
-              className="w-10 h-10 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-              />
-            </svg>
+            <Image
+              src="/book.png"
+              alt="Verbum AI Book Icon"
+              width={40}
+              height={40}
+              className="w-10 h-10 filter brightness-0 invert"
+            />
           </motion.div>
           
           <motion.div
@@ -119,6 +114,17 @@ export default function Home() {
       >
         <p className="text-xs text-slate-400 dark:text-slate-500 mb-2">
           &copy; {new Date().getFullYear()} Verbum AI. Powered by Next.js, OpenAI, and Shadcn UI.
+        </p>
+        <p className="text-xs text-slate-300 dark:text-slate-600 mb-3">
+          <a 
+            href="https://www.flaticon.com/free-icons/studying" 
+            title="studying icons"
+            className="hover:text-blue-500 transition-colors duration-200"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Studying icons created by Freepik - Flaticon
+          </a>
         </p>
         <div className="flex items-center justify-center gap-4 text-xs text-slate-300 dark:text-slate-600">
           <span className="flex items-center gap-1">
