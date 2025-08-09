@@ -13,7 +13,9 @@ export async function getAIRecommendations(
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to get AI recommendations: ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      const errorMessage = errorData.error || response.statusText;
+      throw new Error(`Failed to get AI recommendations: ${errorMessage}`);
     }
 
     const data: AIRecommendationResponse = await response.json();
@@ -26,23 +28,17 @@ export async function getAIRecommendations(
   }
 }
 
-// TODO: Implement OpenAI client when API route is created
-export async function generateRecommendationsWithOpenAI(
-  book: { title: string; author_name?: string[]; subject?: string[] }
-): Promise<string> {
-  // This is a placeholder implementation
-  // The actual OpenAI integration should be implemented in an API route
-  // to keep API keys secure on the server side
-  
-  // Example prompt that would be used in the API route:
-  // `Based on the book "${book.title}"${
-  //   book.author_name ? ` by ${book.author_name.join(", ")}` : ""
-  // }${
-  //   book.subject ? ` (genres: ${book.subject.slice(0, 3).join(", ")})` : ""
-  // }, recommend 3-5 similar books that readers might enjoy.`
+/**
+ * Enhanced AI recommendations with user preferences support
+ */
+export async function getEnhancedAIRecommendations(
+  book: { title: string; author_name?: string[]; subject?: string[] },
+  userPreferences?: { genres?: string[]; authors?: string[] }
+): Promise<AIRecommendationResponse> {
+  const request: AIRecommendationRequest = {
+    book,
+    userPreferences,
+  };
 
-  console.log("Book for AI recommendation:", book);
-  
-  // This would be implemented in /api/ai-recommend route
-  throw new Error("AI recommendations not yet implemented. Please create /api/ai-recommend endpoint.");
+  return getAIRecommendations(request);
 }
