@@ -4,9 +4,9 @@
 export function usePopularSearches() {
   const popularSearches = [
     "Harry Potter", 
-    "Science Fiction", 
-    "Mystery", 
-    "Biography"
+    "The Great Gatsby", 
+    "To Kill a Mockingbird", 
+    "1984"
   ];
 
   return {

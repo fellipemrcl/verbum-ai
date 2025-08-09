@@ -6,7 +6,7 @@ describe('usePopularSearches', () => {
     const { result } = renderHook(() => usePopularSearches());
     
     expect(result.current.popularSearches).toEqual([
-      'Harry Potter', 'Science Fiction', 'Mystery', 'Biography'
+      'Harry Potter', 'The Great Gatsby', 'To Kill a Mockingbird', '1984'
     ]);
     expect(result.current.loading).toBe(false);
   });
