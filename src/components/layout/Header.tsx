@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { SignInButton } from "@/components/SignInButton";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export function Header() {
   const { data: session } = useSession();
@@ -55,6 +56,8 @@ export function Header() {
           transition={{ duration: 0.5 }}
           className="flex items-center gap-4"
         >
+          <ThemeToggle />
+          
           <motion.div
             className="flex items-center gap-3 px-4 py-2 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700"
             whileHover={{ scale: 1.02 }}
@@ -116,7 +119,9 @@ export function Header() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
+          className="flex items-center gap-4"
         >
+          <ThemeToggle />
           <SignInButton />
         </motion.div>
       )}
