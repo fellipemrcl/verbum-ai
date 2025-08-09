@@ -10,9 +10,18 @@ export interface AIRecommendationRequest {
   };
 }
 
+export interface RecommendedBook {
+  title: string;
+  author: string;
+  reason: string;
+  description?: string;
+  genres?: string[];
+  year?: number;
+}
+
 export interface AIRecommendationResponse {
   recommendations: string;
-  relatedBooks?: string[];
+  recommendedBooks?: RecommendedBook[];
   reasoning?: string;
 }
 
