@@ -450,29 +450,140 @@ NEXTAUTH_SECRET=...
 - Write descriptive commit messages with proper scope
 - Squash commits when merging to maintain clean history
 - Use conventional commit format for automated versioning
+- **NEVER create giant commits with all changes together**
+- **ALWAYS group related files into logical, focused commits**
 
-### Example Development Flow
+### Commit Grouping Strategy
+
+**✅ DO: Create focused, logical commits**
+- Group files by feature scope (e.g., all AI recommendation components together)
+- Group by change type (e.g., all type definitions in one commit, tests in another)
+- Group by architectural layer (e.g., API routes, UI components, hooks separately)
+- Keep related changes together (e.g., component + its test + its types)
+
+**❌ DON'T: Create monolithic commits**
+- Never commit all modified files at once with `git add .`
+- Don't mix unrelated changes (e.g., UI updates + API changes + tests)
+- Don't group files just because they were modified at the same time
+
+### Recommended Commit Grouping Patterns
+
+1. **Feature Components Group**
+   ```bash
+   # Group related UI components and their immediate dependencies
+   git add src/components/features/RecommendedBookCard.tsx
+   git add src/components/features/RecommendedBookDialog.tsx
+   git add src/components/features/RecommendedBooksList.tsx
+   git commit -m "feat(recommendations): add recommended book UI components"
+   ```
+
+2. **Type Definitions Group**
+   ```bash
+   # Group type definitions and interfaces
+   git add src/types/AITypes.ts
+   git add src/types/BookTypes.ts
+   git commit -m "feat(types): add AI recommendation type definitions"
+   ```
+
+3. **API Layer Group**
+   ```bash
+   # Group API routes and client functions
+   git add src/app/api/ai-recommend/route.ts
+   git add src/lib/api/openai.ts
+   git commit -m "feat(api): implement AI recommendation API endpoint"
+   ```
+
+4. **Hook Logic Group**
+   ```bash
+   # Group custom hooks and their logic
+   git add src/hooks/useAIRecommendations.ts
+   git commit -m "feat(hooks): add AI recommendations custom hook"
+   ```
+
+5. **Test Coverage Group**
+   ```bash
+   # Group tests for related functionality
+   git add src/__tests__/api/ai-recommend.test.ts
+   git add src/__tests__/lib/openai.test.ts
+   git add src/__tests__/hooks/useAIRecommendations.test.ts
+   git commit -m "test(recommendations): add comprehensive test coverage for AI features"
+   ```
+
+6. **Integration Updates Group**
+   ```bash
+   # Group files that integrate new features into existing components
+   git add src/components/features/BookDetailDialog.tsx
+   git commit -m "feat(recommendations): integrate AI recommendations into book detail dialog"
+   ```
+
+### Example Development Flow with Proper Commit Grouping
 ```bash
 # Create feature branch
 git checkout -b feat/book-recommendations
 
-# Make changes and commit with semantic format
-git add .
-git commit -m "feat(recommendations): implement AI-powered book suggestions"
+# Step 1: Add type definitions first
+git add src/types/AITypes.ts
+git commit -m "feat(types): add RecommendedBook and AI response types"
 
-# ALWAYS run quality checks after changes
-npx tsc --noEmit      # Verify TypeScript
-npm run lint          # Check ESLint
-npm test              # Run tests
-npm run test:coverage # Check coverage
+# Step 2: Implement API layer
+git add src/app/api/ai-recommend/route.ts
+git add src/lib/api/openai.ts
+git commit -m "feat(api): implement OpenAI recommendation API endpoint"
 
-# Continue development with focused commits
-git commit -m "style(recommendations): improve recommendation card layout"
-git commit -m "test(recommendations): add unit tests for recommendation logic"
+# Step 3: Create custom hook
+git add src/hooks/useAIRecommendations.ts
+git commit -m "feat(hooks): add useAIRecommendations hook for state management"
+
+# Step 4: Build UI components
+git add src/components/features/RecommendedBookCard.tsx
+git add src/components/features/RecommendedBookDialog.tsx
+git add src/components/features/RecommendedBooksList.tsx
+git commit -m "feat(ui): add recommended books display components"
+
+# Step 5: Integrate into existing components
+git add src/components/features/BookDetailDialog.tsx
+git commit -m "feat(recommendations): integrate AI recommendations into book details"
+
+# Step 6: Add comprehensive tests
+git add src/__tests__/api/ai-recommend.test.ts
+git add src/__tests__/lib/openai.test.ts
+git commit -m "test(api): add tests for AI recommendation endpoints"
+
+git add src/__tests__/hooks/useAIRecommendations.test.ts
+git commit -m "test(hooks): add tests for AI recommendations hook"
+
+# Quality check after each commit group
+npx tsc --noEmit && npm run lint && npm test
 
 # Final quality check before push
 npm run lint:check && npm run type:check && npm test
 
 # Push and create pull request
 git push origin feat/book-recommendations
+```
+
+### Commit Message Guidelines for Grouped Changes
+- **Be specific about what the group contains**: "add UI components" vs "add RecommendedBookCard, Dialog, and List components"
+- **Use scope to indicate the layer**: `feat(api)`, `feat(ui)`, `feat(hooks)`, `test(api)`
+- **Reference related files in body if needed**:
+  ```bash
+  git commit -m "feat(ui): add recommended books display components
+  
+  - RecommendedBookCard: individual book recommendation display
+  - RecommendedBookDialog: detailed book information modal  
+  - RecommendedBooksList: grid layout for multiple recommendations"
+  ```
+
+### Pre-Commit Quality Checks (Per Commit Group)
+Run quality checks after each logical commit group to catch issues early:
+
+```bash
+# After each commit group
+npx tsc --noEmit      # Verify TypeScript
+npm run lint          # Check ESLint
+npm test              # Run affected tests
+
+# Fix issues immediately before next commit group
+npm run lint:fix      # Auto-fix linting issues
+npm run format        # Format code with Prettier
 ```
