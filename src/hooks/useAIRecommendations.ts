@@ -3,10 +3,11 @@
 import { useState, useCallback } from "react";
 import { getAIRecommendations } from "@/lib/api/openai";
 import type { Book } from "@/types/BookTypes";
-import type { AIRecommendationRequest, AIRecommendationResponse } from "@/types/AITypes";
+import type { AIRecommendationRequest, AIRecommendationResponse, RecommendedBook } from "@/types/AITypes";
 
 interface UseAIRecommendationsReturn {
   recommendation: string;
+  recommendedBooks: RecommendedBook[];
   loading: boolean;
   error: string;
   getRecommendation: (book: Book) => Promise<void>;
@@ -16,6 +17,7 @@ interface UseAIRecommendationsReturn {
 
 export function useAIRecommendations(): UseAIRecommendationsReturn {
   const [recommendation, setRecommendation] = useState("");
+  const [recommendedBooks, setRecommendedBooks] = useState<RecommendedBook[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -23,6 +25,7 @@ export function useAIRecommendations(): UseAIRecommendationsReturn {
     setLoading(true);
     setError("");
     setRecommendation("");
+    setRecommendedBooks([]);
 
     try {
       const request: AIRecommendationRequest = {
@@ -35,17 +38,11 @@ export function useAIRecommendations(): UseAIRecommendationsReturn {
 
       const response: AIRecommendationResponse = await getAIRecommendations(request);
       setRecommendation(response.recommendations);
+      setRecommendedBooks(response.recommendedBooks || []);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to get AI recommendations";
       setError(errorMessage);
-      
-      // Fallback for development - remove when API is implemented
-      if (errorMessage.includes("not yet implemented")) {
-        // Simulate loading time
-        await new Promise(resolve => setTimeout(resolve, 1200));
-        setRecommendation(`Here are some AI-powered recommendations based on "${book.title}":\n\n1. Similar book recommendation 1\n2. Similar book recommendation 2\n3. Similar book recommendation 3\n\nThese recommendations are based on genre, writing style, and reader preferences.`);
-        setError("");
-      }
+      console.error("AI Recommendation Error:", err);
     } finally {
       setLoading(false);
     }
@@ -53,6 +50,7 @@ export function useAIRecommendations(): UseAIRecommendationsReturn {
 
   const clearRecommendation = useCallback(() => {
     setRecommendation("");
+    setRecommendedBooks([]);
     setError("");
   }, []);
 
@@ -62,6 +60,7 @@ export function useAIRecommendations(): UseAIRecommendationsReturn {
 
   return {
     recommendation,
+    recommendedBooks,
     loading,
     error,
     getRecommendation,
